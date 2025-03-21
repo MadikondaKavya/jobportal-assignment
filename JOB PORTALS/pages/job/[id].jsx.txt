@@ -1,0 +1,27 @@
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+
+export default function JobDetails() {
+  const router = useRouter();
+  const { id } = router.query;
+  const [job, setJob] = useState(null);
+
+  useEffect(() => {
+    if (!id) return;
+    async function fetchJob() {
+      const res = await fetch(`/api/jobs/${id}`);
+      const data = await res.json();
+      setJob(data);
+    }
+    fetchJob();
+  }, [id]);
+
+  if (!job) return <p>Loading...</p>;
+
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold">{job.title}</h1>
+      <p className="text-gray-700">{job.description}</p>
+    </div>
+  );
+}
